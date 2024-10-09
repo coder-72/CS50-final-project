@@ -1,0 +1,9 @@
+.full-height {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+#icon {
+    font-size: 2rem;
+    color: blue;
+}

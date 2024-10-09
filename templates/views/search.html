@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    search
+{% endblock %}
+
+{% block content %}
+<div class = "py-4">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="recipes-tab" data-bs-toggle="tab" data-bs-target="#recipes-tab-pane" type="button" role="tab" aria-controls="recipes-tab-pane" aria-selected="false">Recipes</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="resturants-tab" data-bs-toggle="tab" data-bs-target="#resturants-tab-pane" type="button" role="tab" aria-controls="resturants-tab-pane" aria-selected="false">Resturants</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="ingredients-tab" data-bs-toggle="tab" data-bs-target="#ingredients-tab-pane" type="button" role="tab" aria-controls="ingredients-tab-pane" aria-selected="false">Ingredients</button>
+  </li>
+</ul>
+<div class="tab-content px-5 py-1" id="myTabContent">
+  <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+    <div class="input-group rounded">
+      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" id="search-all-input">
+      <span class="input-group-text border-0" id="search-addon">
+        <i class="bi bi-search"></i>
+      </span>
+    </div>
+
+    <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="all-results">
+
+      </div>
+
+    </div>
+  </div>
+
+  </div>
+  <div class="tab-pane fade" id="recipes-tab-pane" role="tabpanel" aria-labelledby="recipes-tab" tabindex="0">
+
+  </div>
+  <div class="tab-pane fade" id="resturants-tab-pane" role="tabpanel" aria-labelledby="resturants-tab" tabindex="0">
+
+  </div>
+  <div class="tab-pane fade" id="ingredients-tab-pane" role="tabpanel" aria-labelledby="ingredients-tab" tabindex="0">
+
+  </div>
+</div>
+    </div>
+{% endblock %}
+
