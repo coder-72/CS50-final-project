@@ -14,7 +14,7 @@
     <button class="nav-link" id="recipes-tab" data-bs-toggle="tab" data-bs-target="#recipes-tab-pane" type="button" role="tab" aria-controls="recipes-tab-pane" aria-selected="false">Recipes</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="resturants-tab" data-bs-toggle="tab" data-bs-target="#resturants-tab-pane" type="button" role="tab" aria-controls="resturants-tab-pane" aria-selected="false">Resturants</button>
+    <button class="nav-link" id="restaurants-tab" data-bs-toggle="tab" data-bs-target="#restaurants-tab-pane" type="button" role="tab" aria-controls="restaurants-tab-pane" aria-selected="false">Restaurants</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="ingredients-tab" data-bs-toggle="tab" data-bs-target="#ingredients-tab-pane" type="button" role="tab" aria-controls="ingredients-tab-pane" aria-selected="false">Ingredients</button>
@@ -32,7 +32,7 @@
     <div class="album py-5 bg-body-tertiary">
     <div class="container">
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="all-results">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="all-results">
 
       </div>
 
@@ -43,7 +43,7 @@
   <div class="tab-pane fade" id="recipes-tab-pane" role="tabpanel" aria-labelledby="recipes-tab" tabindex="0">
 
   </div>
-  <div class="tab-pane fade" id="resturants-tab-pane" role="tabpanel" aria-labelledby="resturants-tab" tabindex="0">
+  <div class="tab-pane fade" id="restaurants-tab-pane" role="tabpanel" aria-labelledby="restaurants-tab" tabindex="0">
 
   </div>
   <div class="tab-pane fade" id="ingredients-tab-pane" role="tabpanel" aria-labelledby="ingredients-tab" tabindex="0">
@@ -51,5 +51,9 @@
   </div>
 </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='search.js') }}"></script>
 {% endblock %}
 
