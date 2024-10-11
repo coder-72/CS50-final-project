@@ -1,30 +1,14 @@
-from flask import Flask, render_template, Blueprint
-from flask_cors import CORS
-from werkzeug.exceptions import HTTPException
-from blueprints.api import api
+from flask import render_template, Flask, request
 
 app = Flask(__name__)
-CORS(app)
-app.register_blueprint(api, url_prefix="/_api")
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('views/index.html', loggedIn = False)
+    return render_template("views/index.html", page_title ="title", )
 
-@app.route('/search')
-def search():
-    return render_template('views/search.html', loggedIn = False)
-
-@app.errorhandler(Exception)
-def error_handler(error):
-    if isinstance(error, HTTPException):
-        error_code = error.code
-    else:
-        error_code = 500
-    print(error)
-
-    return render_template('views/error.html', error=error, code=error_code), error_code
+@app.route("/post")
+def posts():
+    id = request.args.get("id")
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+app.run(debug=True)
