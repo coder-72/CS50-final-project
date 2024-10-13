@@ -7,10 +7,9 @@ function(){
        let html = "";
        let data = {};
        if (query === ""){
-        let data = {};
+        data = {};
        }
-       else{let data = {q : query};}
-
+       else{ data = {q : query};}
            $.ajax({
                 url: 'api/search',
                 method: 'GET',

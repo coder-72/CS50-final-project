@@ -11,7 +11,7 @@ app.register_blueprint(api, url_prefix="/api")
 @app.route("/")
 def index():
     previews = utils.get_previews()
-    return render_template("views/index.html", page_title="Blog: home", post_previews=previews)
+    return render_template("views/index.html", page_title="Blog: home", post_previews=previews, heading_image=url_for("static", filename="assets/img/compass-map.jpg"))
 
 @app.route("/post/<int:post_id>")
 def posts(post_id:int):
@@ -21,27 +21,32 @@ def posts(post_id:int):
 @app.route("/search")
 def search():
     if request.args.get("q"):
-        query = request.args.get("")
+        query = request.args.get("q")
     else:
         query = ""
 
-    return render_template("views/search.html", query=query, page_title="Blog: Search")
+    return render_template("views/search.html", query=query, page_title="Blog: Search", heading_image=url_for("static", filename="assets/img/travel-background.jpg"))
 
 @app.route("/about")
 def about():
-    return render_template("views/about.html", page_title="Blog: about")
+    return render_template("views/about.html", page_title="Blog: about",  heading_image=url_for("static", filename="assets/img/travel-essentials.jpg"))
 
-
+@app.route("/contact")
+def contact():
+    return render_template("views/contact.html", page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
 
 
 @app.errorhandler(Exception)
 def error_handler(error):
     if isinstance(error, HTTPException):
         error_code = error.code
+        error_name = error.name
     else:
         error_code = 500
+        error_name = "Server Error"
+
     print(error)
-    return render_template('views/error.html',page_title=error.code, error=error, code=error_code, name=error.name, time=utils.format_date(utils.get_time())), error_code
+    return render_template('views/error.html',page_title=error_code, error=error, code=error_code, name=error_name, time=utils.format_date(utils.get_time())), error_code
 
 
 

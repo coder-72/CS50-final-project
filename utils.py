@@ -121,8 +121,6 @@ def search_all():
 
     cursor.execute("SELECT * FROM posts ORDER BY date DESC LIMIT 20;")
     results = cursor.fetchall()
-    print("called")
-    print([dict(result) for result in results])
     cursor.close()
     conn.close()
 
