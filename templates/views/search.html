@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block heading%}
+  <div class="post-heading">
+    <h1>Search</h1>
+    <div class="input-group rounded">
+      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" id="search" value="{{query}}">
+      <span class="input-group-text border-0" id="search-addon">
+        <button class="btn p-0" onclick="searchBtn();">
+          <i class="bi bi-search"></i>
+        </button>
+      </span>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7" id="results">
+
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{url_for('static', filename='js/search.js')}}"></script>
+{% endblock %}

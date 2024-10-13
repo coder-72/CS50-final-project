@@ -1,9 +1,9 @@
 import sqlite3 
 from datetime import datetime
 import markdown2
+from bs4 import BeautifulSoup as bs
 
-def get_post(post_id):
-    # Create a new connection for this thread
+def get_post(post_id: int):
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -12,7 +12,6 @@ def get_post(post_id):
     post = cursor.fetchone()
     print(post)
 
-    # Close the cursor and connection
     cursor.close()
     conn.close()
 
@@ -36,84 +35,95 @@ def format_date(date:str):
     return date_obj.strftime("%a %d %b %Y")
 
 def markdown_to_html(text:str):
-    html = markdown2.markdown(text,  extras=[
+    markup = markdown2.markdown(text,  extras=[
             "fenced-code-blocks",
             "tables",
-            "footnotes",
             "strike",
             "smarty-pants",
             "highlightjs",
             "breaks"
         ])
-    print(html)
+    soup = bs(markup, "html.parser")
+    headings = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
+    for heading in headings:
+        heading["class"] = ["section-heading"]
+
+    blockquotes = soup.find_all(["blockquote"])
+    for blockquote in blockquotes:
+        blockquote["class"] = ["blockquote"]
+
+    images = soup.find_all(["img"])
+    for image in images:
+        image["class"] = ["img-fluid"]
+
+    links = soup.find_all(["a"])
+    for link in links:
+        link["target"] = ["_blank"]
+
+    return soup
+
+
+def get_previews(previews:int = 5):
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, title, subtitle, date FROM posts ORDER BY date DESC LIMIT ?", (previews, ))
+    posts = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    html = ""
+
+    for post in posts:
+        html_block = f"""
+                    <!-- Post preview-->
+                    <div class="post-preview">
+                        <a href="/post/{post["id"]}">
+                            <h2 class="post-title">{post["title"]}</h2>
+                            <h3 class="post-subtitle">{post["subtitle"]}</h3>
+                        </a>
+                        <p class="post-meta">
+                            Posted
+                            on {format_date(post["date"])}
+                        </p>
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-4" />
+        """
+        html += html_block
+
     return html
 
+def get_time():
+    now = datetime.now()
+    time = now.strftime('%Y-%m-%d %H:%M:%S')
+    return time
 
-title = 'Discovering the Enchanting Streets of Paris'
-subtitle = 'From Iconic Landmarks to Hidden Gems'
-image = 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34'
-date = '2024-10-13 14:30:00'
-content = """
-## From Iconic Landmarks to Hidden Gems
+def search(query: str):
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
 
-*Written on October 13, 2024*
+    cursor.execute("SELECT * FROM posts_fts WHERE posts_fts MATCH ? ORDER BY rank ASC LIMIT 20;", (query, ))
+    results = cursor.fetchall()
 
-Paris, the City of Light, is renowned for its iconic landmarks, world-class museums, and charming neighborhoods. Whether you're visiting for the first time or returning to discover more of its secrets, there's always something new to explore. In this post, I’ll share my favorite places from my latest trip.
+    cursor.close()
+    conn.close()
 
----
+    return results
 
-### 1. **Eiffel Tower** - The Heart of Paris
+def search_all():
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
 
-![Eiffel Tower](https://images.unsplash.com/photo-1568651768688-c21a3c3b154b)
+    cursor.execute("SELECT * FROM posts ORDER BY date DESC LIMIT 20;")
+    results = cursor.fetchall()
+    print("called")
+    print([dict(result) for result in results])
+    cursor.close()
+    conn.close()
 
-No trip to Paris is complete without a visit to the Eiffel Tower. Standing tall at 324 meters, this architectural marvel offers breathtaking views of the city. I recommend visiting at night when the tower sparkles for five minutes every hour.
-
-> **Pro Tip**: Skip the long lines by booking your tickets online in advance.
-
-[Learn more about visiting the Eiffel Tower](https://www.toureiffel.paris/en).
-
----
-
-### 2. **Le Marais** - A Historical Neighborhood Full of Charm
-
-![Le Marais](https://images.unsplash.com/photo-1565631976670-fb1cdebfcf22)
-
-Le Marais is a district that perfectly blends history, art, and modern life. As you stroll through its narrow streets, you’ll find trendy boutiques, art galleries, and charming cafes. The architecture, with its preserved medieval buildings, adds to the neighborhood's unique appeal.
-
-> **Must-Visit**: Stop by the Place des Vosges, one of the oldest squares in Paris, for a peaceful moment amid the hustle and bustle.
-
----
-
-### 3. **The Louvre** - Home to Masterpieces
-
-![The Louvre](https://images.unsplash.com/photo-1517423440428-a5a00ad493e8)
-
-The Louvre is not only the largest art museum in the world but also a historic monument. With over 38,000 pieces of art, including the Mona Lisa and the Venus de Milo, you can spend hours wandering through its galleries.
-
-> **Tip**: Download the museum's app for a guided tour to enhance your visit.
-
-[Plan your visit to The Louvre](https://www.louvre.fr/en).
-
----
-
-### 4. **Montmartre** - Artistic Inspiration at Every Corner
-
-![Montmartre](https://images.unsplash.com/photo-1513465785642-5a3f41ea3c90)
-
-Perched on a hill in northern Paris, Montmartre is known for its artistic history and bohemian vibe. At the top of the hill, the stunning Sacré-Cœur Basilica offers a panoramic view of Paris. The streets of Montmartre are filled with local artists, making it the perfect place to pick up a unique souvenir.
-
-> **Did You Know?**: Many famous artists, including Picasso and Van Gogh, lived and worked in Montmartre during the late 19th century.
-
----
-
-### Final Thoughts
-
-Paris is a city that captures the hearts of visitors with its blend of beauty, history, and culture. From its towering landmarks to its quaint streets, there's always something new to uncover. I hope this post inspires you to visit Paris and experience its magic for yourself.
-
-For more travel guides, [visit my blog here](https://example.com/my-travel-blog).
-
----
-
-*Thank you for reading! Feel free to share your thoughts in the comments.*
-
-"""
+    return results
