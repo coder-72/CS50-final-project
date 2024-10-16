@@ -8,15 +8,20 @@ app = Flask(__name__)
 CORS(app)
 app.register_blueprint(api, url_prefix="/api")
 
+@app.route("/base")
+def base():
+    return render_template("base.html")
+
+
 @app.route("/")
 def index():
     previews = utils.get_previews()
-    return render_template("views/index.html", page_title="Blog: home", post_previews=previews, heading_image=url_for("static", filename="assets/img/compass-map.jpg"))
+    return render_template("views/index.html", page_title="Blog: home", post_previews=previews, heading_image=url_for("static", filename="assets/img/compass-map.jpg"), title="Welcome to, travel.", subtitle="Welcome to my travel blog, have a look around")
 
 @app.route("/post/<int:post_id>")
 def posts(post_id:int):
     post_content = utils.get_post(int(post_id))
-    return render_template("views/post.html", page_title="Blog: post", title=post_content["title"], subheading=post_content["subtitle"], heading_image=post_content["image"], date=utils.format_date(post_content["date"]), post_content=utils.markdown_to_html(post_content["content"]))
+    return render_template("views/post.html", page_title="Blog: post", title=post_content["title"], subtitle=post_content["subtitle"], heading_image=post_content["image"], date=utils.format_date(post_content["date"]), post_content=utils.markdown_to_html(post_content["content"]))
 
 @app.route("/search")
 def search():

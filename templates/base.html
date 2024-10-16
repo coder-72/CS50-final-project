@@ -2,47 +2,89 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>{{page_title}}</title>
-        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- jQuery from Google CDN -->
+        <title>Travel.</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <!-- Google fonts-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
-        <link href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+        <link href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+        <!--FONTS-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     </head>
     <body>
-      {% include 'partials/nav.html' %}
-      <!-- Page Header-->
-    <header class="masthead" style="background-image: url('{{heading_image}}') ;">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                  {% block heading %}
-                  {% endblock %}
+    <div class="heading" style="background-image: url('{{heading_image}}')">
+        <div class="overlay"></div>
+        <nav class="navbar navbar-expand-lg navbar-dark overlay-heading">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="#">Travel.</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-white" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-white" href="/search">Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-white" href="/about">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-white" href="/contact">Contact</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </nav>
+        <div class="text-light px-4 py-5 text-center">
+            <div class="py-5">
+            {% block heading %}
+                {% endblock %}
+            </div>
         </div>
-    </header>
+    </div>
 
-      {% block content %}
-      {% endblock %}
+{% block content %}
+{% endblock %}
 
-      {% include 'partials/footer.html' %}
-      {% block scripts %}
-      {% endblock %}
+    <footer class="text-center bg-light">
+      <div class="container pt-4">
+        <section class="mb-4">
+          <a class="btn btn-link btn-lg text-dark m-1" href="#!" role="button">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a class="btn btn-link btn-lg text-dark m-1" href="#!" role="button">
+            <i class="bi bi-twitter"></i>
+          </a>
+          <a class="btn btn-link btn-lg text-dark m-1" href="#!" role="button">
+            <i class="bi bi-google"></i>
+          </a>
+          <a class="btn btn-link btn-lg text-dark m-1" href="#!" role="button">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a class="btn btn-link btn-lg text-dark m-1" href="#!" role="button">
+            <i class="bi bi-linkedin"></i>
+          </a>
+          <a class="btn btn-link btn-lg text-dark m-1" href="#!" role="button">
+            <i class="bi bi-github"></i>
+          </a>
+        </section>
+      </div>
+        <hr>
+      <div class="text-center p-3 bg-light">
+        © 2024 Copyright:
+        <a class="text-dark" href="#">Travel.com</a>
+      </div>
+    </footer>
 
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
-    </body>
+    {% block scripts %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

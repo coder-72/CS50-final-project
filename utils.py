@@ -63,12 +63,13 @@ def markdown_to_html(text:str):
     return soup
 
 
-def get_previews(previews:int = 5):
+
+def get_previews(previews: int = 5) -> str:
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, title, subtitle, date FROM posts ORDER BY date DESC LIMIT ?", (previews, ))
+    cursor.execute("SELECT id, title, subtitle, date, image FROM posts ORDER BY date DESC LIMIT ?", (previews,))
     posts = cursor.fetchall()
 
     cursor.close()
@@ -78,19 +79,17 @@ def get_previews(previews:int = 5):
 
     for post in posts:
         html_block = f"""
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="/post/{post["id"]}">
-                            <h2 class="post-title">{post["title"]}</h2>
-                            <h3 class="post-subtitle">{post["subtitle"]}</h3>
-                        </a>
-                        <p class="post-meta">
-                            Posted
-                            on {format_date(post["date"])}
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <img src="{post['image']}" class="card-img-top" alt="Post {post['id']}">
+            <div class="card-body">
+                <h5 class="card-title">{post['title']}</h5>
+                <p class="card-text">{post['subtitle']}</p>
+                <p class="card-date text-muted">{format_date(post['date'])}</p>
+                <a href="/post/{post["id"]}" class="btn btn-primary">Read More</a>
+            </div>
+        </div>
+    </div>
         """
         html += html_block
 

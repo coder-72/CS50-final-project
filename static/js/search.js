@@ -23,19 +23,18 @@ function(){
                     results.forEach(function (post) {
                         console.log(`result ${post.id} processed`)
                         html += `
-                            <!-- Post preview-->
-                            <div class="post-preview">
-                                <a href="/post/${post.id}">
-                                    <h2 class="post-title">${post.title}</h2>
-                                    <h3 class="post-subtitle">${post.subtitle}</h3>
-                                </a>
-                                <p class="post-meta">
-                                    Posted
-                                    on ${formatDate(post.date)}
-                                </p>
+                            <div class="col-md-4">
+                                <div class="card mb-4 shadow-sm">
+                                    <img src="${post.image}" class="card-img-top" alt="Post ${post.id}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${post.title}</h5>
+                                        <p class="card-text">${post.subtitle}</p>
+                                        <p class="card-date text-muted">${formatDate(post.date)}</p>
+                                        <a href="/post/${post.id}" class="btn btn-primary">Read More</a>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Divider-->
-                            <hr class="my-4" />
+
                         `;
 
 
