@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
 
         {% block heading %}
-        <div class="post-heading">
-          <h1 class="h1 text-body-danger">{{code}}</h1>
-          <h2 class="subheading">{{name}}</h2>
-          <span class="meta">
-            Error occurred: {{time}}
-          </span>
-        </div>
+              <h1 class="display-5 fw-bold text-white">{{code}}</h1>
+              <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">{{name}}</p>
+                  <p class="text-light small">{{time}}</p>
+              </div>
 {% endblock %}
 {% block content %}
-        <article class="mb-4">
+        <article class="m-4">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
