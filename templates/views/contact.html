@@ -63,11 +63,12 @@
 {% block scripts %}
 <script src="{{url_for('static', filename='js/validate.js')}}"></script>
 <script>
-    toast = $("#thanksToast");
-    let thanks = {{show_thanks}};
-    if (thanks){
-        toast.show()
-    }
-
+    $(document).ready(function() {
+        let toast = new bootstrap.Toast($('#thanksToast'));
+        let thanks = {{ show_thanks | tojson }};
+        if (thanks) {
+            toast.show();
+        }
+    });
 </script>
 {% endblock %}

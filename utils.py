@@ -173,5 +173,5 @@ def send_email(name: str, email: str, phone: str, message: str):
 def valid_email(email):
     try:
         return validate_email(email)["email"]
-    except EmailNotValidError:
+    except:
         return None

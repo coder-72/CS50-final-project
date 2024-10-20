@@ -16,12 +16,12 @@ def base():
 @app.route("/")
 def index():
     previews = utils.get_previews()
-    return render_template("views/index.html", page_title="Blog: home", post_previews=previews, heading_image=url_for("static", filename="assets/img/compass-map.jpg"), title="Welcome to, travel.", subtitle="Welcome to my travel blog, have a look around")
+    return render_template("views/index.html", page_title="home", post_previews=previews, heading_image=url_for("static", filename="assets/img/compass-map.jpg"), title="Welcome to, travel.", subtitle="Welcome to my travel blog, have a look around")
 
 @app.route("/post/<int:post_id>")
 def posts(post_id:int):
     post_content = utils.get_post(int(post_id))
-    return render_template("views/post.html", page_title="Blog: post", title=post_content["title"], subtitle=post_content["subtitle"], heading_image=post_content["image"], date=utils.format_date(post_content["date"]), post_content=utils.markdown_to_html(post_content["content"]))
+    return render_template("views/post.html", page_title="post", title=post_content["title"], subtitle=post_content["subtitle"], heading_image=post_content["image"], date=utils.format_date(post_content["date"]), post_content=utils.markdown_to_html(post_content["content"]))
 
 @app.route("/search")
 def search():
@@ -30,21 +30,21 @@ def search():
     else:
         query = ""
 
-    return render_template("views/search.html", query=query, page_title="Blog: Search", heading_image=url_for("static", filename="assets/img/travel-background.jpg"))
+    return render_template("views/search.html", query=query, page_title="search", heading_image=url_for("static", filename="assets/img/travel-background.jpg"))
 
 @app.route("/about")
 def about():
-    return render_template("views/about.html", page_title="Blog: about",  heading_image=url_for("static", filename="assets/img/travel-essentials.jpg"))
+    return render_template("views/about.html", page_title="about",  heading_image=url_for("static", filename="assets/img/travel-essentials.jpg"))
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "GET":
-        return render_template("views/contact.html",show_thanks=True, page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
+        return render_template("views/contact.html",show_thanks=False, page_title="contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
     else:
-        email = utils.valid_email(request.args.get("email"))
-        if request.args.get("name") and request.args.get("message") and email:
-            utils.send_email(request.args.get("name"), email, request.args.get("phone"), request.args.get("message"))
-            return render_template("views/contact.html",show_thanks=False, page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
+        email = utils.valid_email(request.form["email"])
+        if request.form["name"] and request.form["message"] and email:
+            utils.send_email(request.form["name"], email, request.form["phone"], request.form["message"])
+            return render_template("views/contact.html",show_thanks=False, page_title="contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
         else:
             raise Exception("Not all required form fields filled")
 
