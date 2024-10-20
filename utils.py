@@ -85,11 +85,13 @@ def get_previews(previews: int = 3) -> str:
     <div class="col-md-4 d-flex align-items-stretch">
         <div class="card mb-4 shadow-sm w-100">
             <img src="{post['image']}" class="card-img-top" alt="Post {post['id']}">
-            <div class="card-body">
+            <div class="card-body d-flex flex-column h-100">
                 <h5 class="card-title">{post['title']}</h5>
                 <p class="card-text">{post['subtitle']}</p>
                 <p class="card-date text-muted">{format_date(post['date'])}</p>
-                <a href="/post/{post["id"]}" class="btn btn-primary">Read More</a>
+                <div class="mt-auto">
+                    <a href="/post/{post["id"]}" class="btn btn-primary p-2">Read More</a>
+                </div>
             </div>
         </div>
     </div>

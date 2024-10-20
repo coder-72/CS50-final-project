@@ -3,13 +3,19 @@
 
 {% block heading%}
     <h1>Search</h1>
-    <div class="input-group rounded px-4">
-      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" id="search" value="{{query}}">
-      <span class="input-group-text border-0" id="search-addon">
-        <button class="btn p-0" onclick="searchBtn();">
-          <i class="bi bi-search"></i>
-        </button>
-      </span>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+          <div class="input-group rounded">
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" id="search" value="{{query}}">
+            <span class="input-group-text border-0" id="search-addon">
+              <button class="btn p-0" onclick="searchBtn();">
+                <i class="bi bi-search"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
 {% endblock %}
 
