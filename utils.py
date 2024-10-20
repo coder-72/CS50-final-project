@@ -3,6 +3,8 @@ from datetime import datetime
 import markdown2
 from bs4 import BeautifulSoup as bs
 from protonmail import ProtonMail
+from email_validator import validate_email, EmailNotValidError
+
 def get_post(post_id: int):
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
@@ -127,7 +129,7 @@ def search_all():
 
     return results
 
-def send_email(name, email, phone, message):
+def send_email(name: str, email: str, phone: str, message: str):
     contact_email = "72.jake.ward@gmail.com"
     try:
         proton.load("session.pickle")
@@ -166,3 +168,10 @@ def send_email(name, email, phone, message):
         body=html
     )
     proton.send_message(message)
+
+
+def valid_email(email):
+    try:
+        return validate_email(email)["email"]
+    except EmailNotValidError:
+        return None

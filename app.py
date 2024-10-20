@@ -38,11 +38,15 @@ def about():
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
-    if request.method == "POST":
-        return render_template("views/contact.html", page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
-    elif request.args.get("name") and request.args.get("email") and request.args.get("phone") and request.args.get("message"):
+    if request.method == "GET":
+        return render_template("views/contact.html",show_thanks=True, page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
     else:
-        raise Exception("Not all required form fields filled")
+        email = utils.valid_email(request.args.get("email"))
+        if request.args.get("name") and request.args.get("message") and email:
+            utils.send_email(request.args.get("name"), email, request.args.get("phone"), request.args.get("message"))
+            return render_template("views/contact.html",show_thanks=False, page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
+        else:
+            raise Exception("Not all required form fields filled")
 
 
 @app.errorhandler(Exception)
