@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 import markdown2
 from bs4 import BeautifulSoup as bs
-
+from protonmail import ProtonMail
 def get_post(post_id: int):
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
@@ -17,10 +17,12 @@ def get_post(post_id: int):
 
     return post
 
-def add_post(title, subtitle, image, date, content):
+def add_post(title: str, subtitle: str, image: str, content: str):
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
+
+    date = get_time()
 
     cursor.execute("INSERT INTO posts (title, subtitle, image, date, content) VALUES (?, ?, ?, ?, ?)", (title, subtitle, image, date, content))
 
@@ -124,3 +126,43 @@ def search_all():
     conn.close()
 
     return results
+
+def send_email(name, email, phone, message):
+    contact_email = "72.jake.ward@gmail.com"
+    try:
+        proton.load("session.pickle")
+    except:
+        username = "contact-travel-blog@protonmail.com"
+        password = "GCTL6xiGUMq4*av"
+        proton = ProtonMail()
+        proton.login(username, password)
+        proton.revoke_all_sessions()
+        proton.save_session("session.pickle")
+
+    html = f"""
+    <html>
+        <body>
+            <h1 style="text-align: center;">CONTACT FORM</h1>
+            <p>
+                NAME: {name}
+                <br>
+                EMAIL: {email}
+                <br>
+                PHONE: {phone}
+                <br>
+            <p>
+            <h2>Message</h2>
+            <hr>
+            <p>
+            {message}
+            </p>
+        </body>
+    </html>
+
+    """
+    message = proton.create_message(
+        recipients=[contact_email],
+        subject="CONTACT",
+        body=html
+    )
+    proton.send_message(message)

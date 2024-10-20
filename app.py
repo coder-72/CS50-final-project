@@ -36,9 +36,13 @@ def search():
 def about():
     return render_template("views/about.html", page_title="Blog: about",  heading_image=url_for("static", filename="assets/img/travel-essentials.jpg"))
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
-    return render_template("views/contact.html", page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
+    if request.method == "POST":
+        return render_template("views/contact.html", page_title="Blog: contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
+    elif request.args.get("name") and request.args.get("email") and request.args.get("phone") and request.args.get("message"):
+    else:
+        raise Exception("Not all required form fields filled")
 
 
 @app.errorhandler(Exception)
