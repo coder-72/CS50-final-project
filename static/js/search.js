@@ -23,8 +23,8 @@ function(){
                     results.forEach(function (post) {
                         console.log(`result ${post.id} processed`)
                         html += `
-                            <div class="col-md-4">
-                                <div class="card mb-4 shadow-sm">
+                            <div class="col-md-4 d-flex align-items-stretch">
+                                <div class="card mb-4 shadow-sm  w-100">
                                     <img src="${post.image}" class="card-img-top" alt="Post ${post.id}">
                                     <div class="card-body">
                                         <h5 class="card-title">${post.title}</h5>

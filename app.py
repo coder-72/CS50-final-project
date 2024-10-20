@@ -8,11 +8,6 @@ app = Flask(__name__)
 CORS(app)
 app.register_blueprint(api, url_prefix="/api")
 
-@app.route("/base")
-def base():
-    return render_template("base.html")
-
-
 @app.route("/")
 def index():
     previews = utils.get_previews()
@@ -44,7 +39,7 @@ def contact():
         email = utils.valid_email(request.form["email"])
         if request.form["name"] and request.form["message"] and email:
             utils.send_email(request.form["name"], email, request.form["phone"], request.form["message"])
-            return render_template("views/contact.html",show_thanks=False, page_title="contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
+            return render_template("views/contact.html",show_thanks=True, page_title="contact", heading_image=url_for("static", filename="assets/img/contact-us.jpg"))
         else:
             raise Exception("Not all required form fields filled")
 

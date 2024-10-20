@@ -12,7 +12,6 @@ def get_post(post_id: int):
 
     cursor.execute("SELECT * FROM posts WHERE id = ? LIMIT 1", (post_id,))
     post = cursor.fetchone()
-    print(post)
 
     cursor.close()
     conn.close()
@@ -58,7 +57,7 @@ def markdown_to_html(text:str):
 
     images = soup.find_all(["img"])
     for image in images:
-        image["class"] = ["img-fluid"]
+        image["class"] = ["img-fluid", "px-1"]
 
     links = soup.find_all(["a"])
     for link in links:
@@ -68,7 +67,7 @@ def markdown_to_html(text:str):
 
 
 
-def get_previews(previews: int = 5) -> str:
+def get_previews(previews: int = 3) -> str:
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -83,8 +82,8 @@ def get_previews(previews: int = 5) -> str:
 
     for post in posts:
         html_block = f"""
-    <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
+    <div class="col-md-4 d-flex align-items-stretch">
+        <div class="card mb-4 shadow-sm w-100">
             <img src="{post['image']}" class="card-img-top" alt="Post {post['id']}">
             <div class="card-body">
                 <h5 class="card-title">{post['title']}</h5>
@@ -175,3 +174,4 @@ def valid_email(email):
         return validate_email(email)["email"]
     except:
         return None
+    

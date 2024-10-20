@@ -51,3 +51,9 @@ a:hover {
     position: relative; /* Ensure text is above the overlay */
     z-index: 2; /* Place text above the overlay */
 }
+
+.card-img-top {
+    height: 12rem;
+    object-fit: cover;
+    width: 100%;
+  }
