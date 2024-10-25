@@ -16,23 +16,6 @@ body {
     overflow: hidden;
 }
 
-
-
-
-
-a {
-    color: #007bff; /* Link color */
-    text-decoration: none; /* Remove underline */
-    padding: 5px 10px; /* Add padding */
-    border-radius: 5px; /* Rounded corners */
-    transition: background-color 0.3s ease; /* Smooth transition */
-}
-
-a:hover {
-    background-color: rgba(0, 123, 255, 0.1); /* Light background on hover */
-    text-decoration: underline; /* Underline on hover */
-}
-
 .overlay {
     position: absolute;
     top: 0;
@@ -56,4 +39,10 @@ a:hover {
     height: 12rem;
     object-fit: cover;
     width: 100%;
+  }
+  [data-bs-theme="dark"] .f-icon {
+  color: var(--bs-light);
+  }
+    [data-bs-theme="light"] .f-icon {
+  color: var(--bs-dark);
   }
