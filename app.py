@@ -1,11 +1,15 @@
-from flask import render_template, Flask, request, url_for
+from flask import render_template, Flask, request, url_for, session
 from flask_cors import CORS
+from flask_session import Session
 import utils
 from werkzeug.exceptions import HTTPException, BadRequest
 from api import api
 from admin import admin
 
 app = Flask(__name__)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 CORS(app)
 app.register_blueprint(api, url_prefix="/api")
 app.register_blueprint(admin, url_prefix="/admin")

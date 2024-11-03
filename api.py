@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from werkzeug.exceptions import HTTPException, BadRequest
 import utils
 
@@ -13,6 +13,13 @@ def search():
         posts = utils.search_all()
     posts_serializable = [dict(post) for post in posts]
     return jsonify({"results": posts_serializable})
+
+@api.route("/mode")
+def mode():
+    mode = request.args.get("mode")
+    session["mode"] = mode
+    print(mode)
+    return jsonify(success=True)
 
 @api.errorhandler(Exception)
 def error_handler(error):

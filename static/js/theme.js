@@ -1,55 +1,75 @@
 $(document).ready(
     function () {
-        function setTheme(theme){
-            if (theme === 'auto') {
-                let darkmode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-               if (darkmode) {
-                $('html').attr('data-bs-theme', 'dark')
-               }
-                else{
-                    $('html').attr('data-bs-theme', 'light')
-                }
-            }
-            else if (theme == 'light'){
-                $('html').attr('data-bs-theme', 'light')
-            }
-            else{
-                $('html').attr('data-bs-theme', 'dark')
-            }
-        }
+        let session_theme = '{{session.get("mode", "auto")}}'
+        setTheme(session_theme);
+
         $('#btn-light-bs-theme').click(
         function () {
             setTheme('light');
-            $(this).attr('aria-pressed', 'true');
-            $('#btn-auto-bs-theme').attr('aria-pressed', 'false');
-            $('#btn-dark-bs-theme').attr('aria-pressed', 'false');
-            console.log('click light');
+            setSession('light');
         }
         );
 
         $('#btn-dark-bs-theme').click(
         function () {
             setTheme('dark');
-            $(this).attr('aria-pressed', 'true');
-            $('#btn-light-bs-theme').attr('aria-pressed', 'false');
-            $('#btn-auto-bs-theme').attr('aria-pressed', 'false');
-            console.log('click dark');
+            setSession('dark');
         }
         );
 
         $('#btn-auto-bs-theme').click(
         function () {
             setTheme('auto');
-            $(this).attr('aria-pressed', 'true');
+            setSession('auto');
+        }
+        );
+    }
+
+);
+
+function setTheme(theme){
+    if (theme === 'auto') {
+        let darkmode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+       if (darkmode) {
+        $('html').attr('data-bs-theme', 'dark');
+        $('#btn-auto-bs-theme').attr('aria-pressed', 'true');
+        $('#btn-light-bs-theme').attr('aria-pressed', 'false');
+        $('#btn-dark-bs-theme').attr('aria-pressed', 'false');
+        console.log('click auto');
+       }
+        else{
+            $('html').attr('data-bs-theme', 'light');
+            $('#btn-auto-bs-theme').attr('aria-pressed', 'true');
             $('#btn-light-bs-theme').attr('aria-pressed', 'false');
             $('#btn-dark-bs-theme').attr('aria-pressed', 'false');
             console.log('click auto');
         }
-        );
-
-        setTheme('auto');
-        console.log('ready')
     }
+    else if (theme === 'light'){
+        $('html').attr('data-bs-theme', 'light');
+        $('#btn-auto-bs-theme').attr('aria-pressed', 'false');
+        $('#btn-light-bs-theme').attr('aria-pressed', 'true');
+        $('#btn-dark-bs-theme').attr('aria-pressed', 'false');
+        console.log('click light');
+    }
+    else{
+        $('html').attr('data-bs-theme', 'dark');
+        $('#btn-auto-bs-theme').attr('aria-pressed', 'false');
+        $('#btn-light-bs-theme').attr('aria-pressed', 'false');
+        $('#btn-dark-bs-theme').attr('aria-pressed', 'true');
+        console.log('click dark');
+    }
+}
 
-);
-console.log('hello');
+function setSession(theme) {
+    $.ajax({
+        url: 'api/mode',
+        method: 'POST',
+        dataType: 'json',
+        data: {mode : theme},
+        error: function(xhr, status, error) {console.log(status, error);},
+        success: function(response){
+            console.log('sucess setting session mode');
+        }
+    });
+}
