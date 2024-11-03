@@ -9,6 +9,10 @@ def dashboard():
     html = utils.admin_articles()
     return render_template("admin/dashboard.html", html=html, page_title="dashboard", title="Dashboard", subtitle="Welcome back!")
 
+@admin.route("/add_post", methods=["GET", "POST"])
+def add_post():
+    return render_template("admin/add_post.html", page_title="Add post", title="Add post",subtitle="Add a new post", show_thanks=True)
+
 @admin.errorhandler(Exception)
 def error_handler(error):
     if isinstance(error, HTTPException):

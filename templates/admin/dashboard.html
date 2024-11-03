@@ -28,7 +28,13 @@
 </div>
 
 
-    <div class="container mt-5">
+<div class="container mt-2">
+    <div class="d-flex justify-content-end mb-3">
+        <a href="/admin/add_post" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-plus-lg"></i>
+            <span class="ms-2">Add post</span>
+        </a>
+    </div>
     <div class="accordion" id="accordion">
       {{ html|safe }}
     </div>
@@ -39,5 +45,5 @@
     <script>
         let del_endpoint = {{ url_for("api.delete")|tojson}};
     </script>
-    <script src="{{url_for('static', filename='js/admin.js')}}"></script>
+    <script src="{{url_for('static', filename='js/admin_dashboard.js')}}"></script>
 {% endblock %}

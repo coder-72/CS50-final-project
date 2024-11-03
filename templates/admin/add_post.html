@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block heading %}
+              <h1 class="display-5 fw-bold text-white">{{title}}</h1>
+              <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">{{subtitle}}</p>
+              </div>
+{%  endblock %}
+
+{% block content %}
+<div class="m-5">
+    <form id="addForm" class="needs-validation" method="post" novalidate>
+        <div class="form p-1 has-validation">
+            <input class="form-control" id="file" type="file" placeholder="No file chosen" name="file"/>
+            <div class="invalid-feedback">File needs to be valid.</div>
+        </div>
+        <div class="form-floating p-1">
+            <textarea class="form-control" id="markdown" placeholder="Markdown" style="height: 12rem" name="markdown"></textarea>
+            <label for="markdown">Markdown</label>
+            <div class="invalid-feedback">Invalid markdown</div>
+        </div>
+        <br />
+        <div>
+            <button class="btn btn-warning text-uppercase" id="addButton" type="submit">add</button>
+            <button class="btn btn-primary text-uppercase" id="previewButton" type="button">preview</button>
+        </div>
+    </form>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="addToast" class="toast" role="info" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Travel.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Post added
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{url_for('static', filename='js/validate.js')}}"></script>
+    <script src="{{url_for('static', filename='js/add_post.js')}}"></script>
+    <script>
+        $(document).ready(function() {
+            let toast = new bootstrap.Toast($('#addToast'));
+            let thanks = {{ show_thanks | tojson }};
+            if (thanks) {
+                toast.show();
+            }
+        });
+    </script>
+{% endblock %}

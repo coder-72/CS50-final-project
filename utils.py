@@ -201,7 +201,7 @@ def admin_articles():
                   <div class="my-2">
                     <button type="button" class="btn btn-danger mx-1 delete-button" data-delete-id="{article['id']}" data-delete-name="{article['title']}">Delete</button>
                     <button type="button" class="btn btn-warning mx-1">Edit</button>
-                    <a href="/post/{article['id']}" class="btn btn-info mx-1">View</a>
+                    <a href="/post/{article['id']}" class="btn btn-primary mx-1">View</a>
                   </div>
                 </div>
               </div>
