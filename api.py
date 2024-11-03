@@ -14,11 +14,17 @@ def search():
     posts_serializable = [dict(post) for post in posts]
     return jsonify({"results": posts_serializable})
 
-@api.route("/mode", methods=["GET"])
+@api.route("/mode", methods=["POST"])
 def mode():
-    mode = request.args.get("mode")
+    mode = request.json.get("mode")
     session["mode"] = mode
     print(mode)
+    return jsonify(success=True)
+
+@api.route("/delete", methods=["DELETE"])
+def delete():
+    id = int(request.json.get("id"))
+    print(id)
     return jsonify(success=True)
 
 @api.errorhandler(Exception)

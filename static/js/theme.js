@@ -63,10 +63,11 @@ function setTheme(theme){
 
 function setSession(theme) {
     $.ajax({
-        url: 'api/mode',
-        method: 'GET',
+        url: set_mode_endpoint,
+        method: 'POST',
+        contentType: 'application/json',
         dataType: 'json',
-        data: {mode : theme},
+        data: JSON.stringify({ mode: theme }),
         error: function(xhr, status, error) {console.log(status, error);},
         success: function(response){
             console.log('sucess setting session mode');

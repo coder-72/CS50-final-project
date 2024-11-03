@@ -7,9 +7,37 @@
 {%  endblock %}
 
 {% block content %}
+<div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="modalTitle">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTitle">Are you sure you want to delete this?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-delete-yes">Yes</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
     <div class="container mt-5">
     <div class="accordion" id="accordion">
       {{ html|safe }}
     </div>
   </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let del_endpoint = {{ url_for("api.delete")|tojson}};
+    </script>
+    <script src="{{url_for('static', filename='js/admin.js')}}"></script>
 {% endblock %}

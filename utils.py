@@ -199,8 +199,9 @@ def admin_articles():
                   <strong>Description:</strong> {article["subtitle"]}<br>
                   <small class="text-muted">{format_date(article['date'])}</small>
                   <div class="my-2">
-                    <button type="button" class="btn btn-danger mx-1">Delete</button>
-                    <button type="button" class="btn btn-info mx-1">Edit</button>
+                    <button type="button" class="btn btn-danger mx-1 delete-button" data-delete-id="{article['id']}" data-delete-name="{article['title']}">Delete</button>
+                    <button type="button" class="btn btn-warning mx-1">Edit</button>
+                    <a href="/post/{article['id']}" class="btn btn-info mx-1">View</a>
                   </div>
                 </div>
               </div>
@@ -208,3 +209,10 @@ def admin_articles():
             '''
     return html
 
+def delete_post(id:int):
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM posts WHERE id = ? LIMIT 1", (id, ))
+    cursor.close()
+    conn.close()

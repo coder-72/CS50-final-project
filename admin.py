@@ -7,7 +7,7 @@ admin = Blueprint("admin", __name__, static_folder="static")
 @admin.route("/")
 def dashboard():
     html = utils.admin_articles()
-    return render_template("admin/dashboard.html", html=html)
+    return render_template("admin/dashboard.html", html=html, page_title="dashboard", title="Dashboard", subtitle="Welcome back!")
 
 @admin.errorhandler(Exception)
 def error_handler(error):
