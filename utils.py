@@ -174,6 +174,37 @@ def send_email(name: str, email: str, phone: str, message: str):
 def valid_email(email):
     try:
         return validate_email(email)["email"]
-    except:
+    except Exception:
         return None
-    
+
+def admin_articles():
+    html = ""
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM posts ORDER BY date DESC")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    for article in results:
+        html += f'''
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading{article["id"]}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{article["id"]}" aria-expanded="true" aria-controls="collapse{article["id"]}">
+                  {article['title']}
+                </button>
+              </h2>
+              <div id="collapse{article["id"]}" class="accordion-collapse collapse" aria-labelledby="heading{article["id"]}" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                  <strong>Description:</strong> {article["subtitle"]}<br>
+                  <small class="text-muted">{format_date(article['date'])}</small>
+                  <div class="my-2">
+                    <button type="button" class="btn btn-danger mx-1">Delete</button>
+                    <button type="button" class="btn btn-info mx-1">Edit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            '''
+    return html
+

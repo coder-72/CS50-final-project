@@ -3,10 +3,12 @@ from flask_cors import CORS
 import utils
 from werkzeug.exceptions import HTTPException, BadRequest
 from api import api
+from admin import admin
 
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(api, url_prefix="/api")
+app.register_blueprint(admin, url_prefix="/admin")
 
 @app.route("/")
 def index():
