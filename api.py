@@ -14,7 +14,7 @@ def search():
     posts_serializable = [dict(post) for post in posts]
     return jsonify({"results": posts_serializable})
 
-@api.route("/mode")
+@api.route("/mode", methods=["GET"])
 def mode():
     mode = request.args.get("mode")
     session["mode"] = mode

@@ -1,6 +1,6 @@
 $(document).ready(
     function () {
-        let session_theme = '{{session.get("mode", "auto")}}'
+        console.log(session_theme);
         setTheme(session_theme);
 
         $('#btn-light-bs-theme').click(
@@ -64,7 +64,7 @@ function setTheme(theme){
 function setSession(theme) {
     $.ajax({
         url: 'api/mode',
-        method: 'POST',
+        method: 'GET',
         dataType: 'json',
         data: {mode : theme},
         error: function(xhr, status, error) {console.log(status, error);},
