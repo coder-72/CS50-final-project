@@ -50,7 +50,7 @@ def contact():
             raise Exception("Not all required form fields filled")
 
 
-@app.errorhandler(Exception)
+#@app.errorhandler(Exception)
 def error_handler(error):
     if isinstance(error, HTTPException):
         error_code = error.code

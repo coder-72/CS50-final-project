@@ -46,3 +46,20 @@ body {
     [data-bs-theme="light"] .f-icon {
   color: var(--bs-dark);
   }
+
+[data-bs-theme="dark"] pre.line-numbers {
+    background-color: #252933 !important; /* Dark background for the <pre> block */
+}
+
+[data-bs-theme="dark"] pre.line-numbers code {
+    color: var(--bs-light) !important; /* Light text for dark theme */
+}
+
+[data-bs-theme="light"] pre.line-numbers {
+    background-color: var(--bs-light) !important; /* Light background for the <pre> block */
+}
+
+[data-bs-theme="light"] pre.line-numbers code {
+    color: var(--bs-dark) !important; /* Dark text for light theme */
+}
+

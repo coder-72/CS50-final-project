@@ -20,7 +20,7 @@
                 <p></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-add-yes">Yes</button>
+                <button type="button" class="btn btn-primary resetButton" data-bs-dismiss="modal" id="modal-add-yes">Yes</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
             </div>
 
@@ -29,7 +29,14 @@
     </div>
 </div>
 
-<div class="m-5">
+<div class="container mt-2">
+    <div class="d-flex justify-content-start mb-3">
+        <a href="/admin" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-arrow-return-left"></i>
+            <span class="ms-2">Back</span>
+        </a>
+    </div>
+
     <form id="addForm" class="needs-validation" method="post" action="{{ url_for('admin.add_post') }}" novalidate>
         <div class="form-floating p-1 has-validation">
             <input type="text" class="form-control" id="title" placeholder="title" name="title" required>
@@ -57,8 +64,8 @@
         </div>
         <br />
         <div>
-            <button class="btn btn-warning text-uppercase submit" id="add-button" type="button">add</button>
-            <button class="btn btn-primary text-uppercase" id="previewButton" type="button">preview</button>
+            <button class="btn btn-warning submit" id="add-button" type="button">Add</button>
+            <button class="btn btn-primary" id="previewButton" type="button">Preview</button>
         </div>
     </form>
 </div>
@@ -78,7 +85,8 @@
 
 {% block scripts %}
     <script src="{{url_for('static', filename='js/validate2.js')}}"></script>
-    <script src="{{url_for('static', filename='js/add_post.js')}}"></script>
+    <script src="{{url_for('static', filename='js/preview.js')}}"></script>
+    <script src="{{url_for('static', filename='js/unsaved.js')}}"></script>
     <script>
         $(document).ready(function() {
             let toast = new bootstrap.Toast($('#addToast'));

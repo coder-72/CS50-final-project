@@ -1,12 +1,5 @@
 $(document).ready(
     function (){
-        $('#modal-add-yes').click(
-        function (){
-            form = document.getElementById('addForm');
-            form.submit();
-        }
-        );
-
         $('#previewButton').click(
         function (){
             console.log('preview')
@@ -34,6 +27,16 @@ $(document).ready(
                 let image = $('#image').val();
                 loadPreview(text, title, subtitle, image);
             }
+            }
+            );
+            $('#previewButtonedit').click(
+        function (){
+            console.log('preview')
+                let text = $('#markdown').val();
+                let title = $('#title').val();
+                let subtitle = $('#subtitle').val();
+                let image = $('#image').val();
+                loadPreview(text, title, subtitle, image);
 
         }
         );
@@ -42,7 +45,7 @@ $(document).ready(
     let form = document.createElement('form');
     form.method = 'POST';
     form.target = '_blank';
-    form.action = '/admin/add_post/preview';
+    form.action = '/admin/preview';
     form.style.display = 'none';
 
     let input1 = document.createElement('input');

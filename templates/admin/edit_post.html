@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block heading %}
+              <h1 class="display-5 fw-bold text-white">{{title}}</h1>
+              <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">{{subtitle}}</p>
+              </div>
+{%  endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="modalTitle">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTitle">Are you sure you want to save your alterations?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary resetButton" data-bs-dismiss="modal" id="modal-edit-yes">Yes</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="container mt-2">
+    <div class="d-flex justify-content-start mb-3">
+        <a href="/admin" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-arrow-return-left"></i>
+            <span class="ms-2">Back</span>
+        </a>
+    </div>
+
+    <form id="editForm" class="needs-validation" method="post" action="{{ url_for('admin.edit_post', post_id=post.id) }}" novalidate>
+        <div class="form-floating p-1 has-validation">
+            <input type="text" class="form-control" id="title" placeholder="title" name="title" required value="{{post['title']}}">
+            <label for="title">Title</label>
+            <div class="invalid-feedback">Title is required</div>
+        </div>
+        <div class="form-floating p-1 has-validation">
+            <input type="text" class="form-control" id="subtitle" placeholder="subtitle" name="subtitle" value="{{post['subtitle']}}">
+            <label for="subtitle">subtitle</label>
+            <div class="invalid-feedback">Invalid subtitle</div>
+        </div>
+        <div class="form-floating p-1 has-validation">
+            <input type="text" class="form-control" id="image" placeholder="image link" name="image" required value="{{post['image']}}">
+            <label for="image">Image link</label>
+            <div class="invalid-feedback">Image is required</div>
+        </div>
+        <div class="form-floating p-1">
+            <textarea class="form-control" id="markdown" placeholder="Markdown" style="height: 12rem" name="markdown" required>{{post['content']}}</textarea>
+            <label for="markdown">Markdown</label>
+            <div class="invalid-feedback">Markdown required</div>
+        </div>
+        <br />
+        <div>
+            <button class="btn btn-warning submit" id="add-button" type="button">Save</button>
+            <button class="btn btn-primary " id="previewButtonedit" type="button">Preview</button>
+            <a href="/admin" class="btn btn-danger">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{url_for('static', filename='js/preview.js')}}"></script>
+    <script src="{{url_for('static', filename='js/validate3.js')}}"></script>
+    <script src="{{url_for('static', filename='js/unsaved.js')}}"></script>
+{% endblock %}

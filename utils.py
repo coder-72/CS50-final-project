@@ -4,6 +4,7 @@ import markdown2
 from bs4 import BeautifulSoup as bs
 from protonmail import ProtonMail
 from urllib.parse import urlparse
+from flask import url_for
 from email_validator import validate_email, EmailNotValidError
 
 def get_post(post_id: int):
@@ -44,8 +45,10 @@ def markdown_to_html(text:str):
             "tables",
             "strike",
             "smarty-pants",
-            "highlightjs",
-            "breaks"
+            "break-on-newline",
+            "footnotes",
+            "task_list",
+            "smarty-pants"
         ])
     soup = bs(markup, "html.parser")
     headings = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
@@ -63,6 +66,21 @@ def markdown_to_html(text:str):
     links = soup.find_all(["a"])
     for link in links:
         link["target"] = ["_blank"]
+
+    tables = soup.find_all(["table"])
+    for table in tables:
+        table["class"] = ["table"]
+
+    old_code= soup.find_all("code")
+    for block in old_code:
+        contents = block.text
+        new_pre = soup.new_tag("pre")
+        new_code = soup.new_tag("code")
+        new_code.string = contents
+        new_code["class"] = ["language-auto"]
+        new_pre.append(new_code)
+        new_pre["class"] = ["line-numbers", "rounded"]
+        block.replace_with(new_pre)
 
     return soup
 
@@ -201,8 +219,8 @@ def admin_articles():
                   <small class="text-muted">{format_date(article['date'])}</small>
                   <div class="my-2">
                     <button type="button" class="btn btn-danger mx-1 delete-button" data-delete-id="{article['id']}" data-delete-name="{article['title']}">Delete</button>
-                    <button type="button" class="btn btn-warning mx-1">Edit</button>
-                    <a href="/post/{article['id']}" class="btn btn-primary mx-1">View</a>
+                    <a href="{url_for('admin.edit_post', post_id=article['id'])}" class="btn btn-warning mx-1">Edit</a>
+                    <a href="{ url_for('posts', post_id=article['id']) }" class="btn btn-primary mx-1">View</a>
                   </div>
                 </div>
               </div>
@@ -227,3 +245,14 @@ def allowed_file(filename):
 def is_valid_url(url):
     parsed_url = urlparse(url)
     return all([parsed_url.scheme, parsed_url.netloc])
+
+def update_post(id:int, title: str, subtitle: str, image: str, content: str):
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE posts SET title = ?, subtitle = ?, image = ?, content = ? WHERE id = ? ", (title, subtitle, image, content, id))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
