@@ -3,6 +3,7 @@ from datetime import datetime
 import markdown2
 from bs4 import BeautifulSoup as bs
 from protonmail import ProtonMail
+from urllib.parse import urlparse
 from email_validator import validate_email, EmailNotValidError
 
 def get_post(post_id: int):
@@ -216,3 +217,13 @@ def delete_post(id:int):
     cursor.execute("DELETE FROM posts WHERE id = ? LIMIT 1", (id, ))
     cursor.close()
     conn.close()
+
+#chatgpt used
+def allowed_file(filename):
+    extensions = [".md", ".txt"]
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
+
+#chatgpt
+def is_valid_url(url):
+    parsed_url = urlparse(url)
+    return all([parsed_url.scheme, parsed_url.netloc])

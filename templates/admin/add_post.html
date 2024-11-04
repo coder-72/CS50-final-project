@@ -8,10 +8,46 @@
 {%  endblock %}
 
 {% block content %}
+
+<div class="modal fade" id="add-modal" tabindex="-1" aria-labelledby="modalTitle">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTitle">Are you sure you want to add this?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-add-yes">Yes</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 <div class="m-5">
-    <form id="addForm" class="needs-validation" method="post" novalidate>
+    <form id="addForm" class="needs-validation" method="post" action="{{ url_for('admin.add_post') }}" novalidate>
+        <div class="form-floating p-1 has-validation">
+            <input type="text" class="form-control" id="title" placeholder="title" name="title" required>
+            <label for="title">Title</label>
+            <div class="invalid-feedback">Title is required</div>
+        </div>
+        <div class="form-floating p-1 has-validation">
+            <input type="text" class="form-control" id="subtitle" placeholder="subtitle" name="subtitle">
+            <label for="subtitle">subtitle</label>
+            <div class="invalid-feedback">Invalid subtitle</div>
+        </div>
+        <div class="form-floating p-1 has-validation">
+            <input type="text" class="form-control" id="image" placeholder="image link" name="image" required>
+            <label for="image">Image link</label>
+            <div class="invalid-feedback">Image is required</div>
+        </div>
         <div class="form p-1 has-validation">
-            <input class="form-control" id="file" type="file" placeholder="No file chosen" name="file"/>
+            <input class="form-control" id="file" type="file" placeholder="No file chosen" name="file" accept=".md, .txt"/>
             <div class="invalid-feedback">File needs to be valid.</div>
         </div>
         <div class="form-floating p-1">
@@ -21,7 +57,7 @@
         </div>
         <br />
         <div>
-            <button class="btn btn-warning text-uppercase" id="addButton" type="submit">add</button>
+            <button class="btn btn-warning text-uppercase submit" id="add-button" type="button">add</button>
             <button class="btn btn-primary text-uppercase" id="previewButton" type="button">preview</button>
         </div>
     </form>
@@ -41,7 +77,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{url_for('static', filename='js/validate.js')}}"></script>
+    <script src="{{url_for('static', filename='js/validate2.js')}}"></script>
     <script src="{{url_for('static', filename='js/add_post.js')}}"></script>
     <script>
         $(document).ready(function() {
