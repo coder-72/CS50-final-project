@@ -5,6 +5,7 @@ import utils
 from werkzeug.exceptions import HTTPException, BadRequest
 from api import api
 from admin import admin
+from auth import auth
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -13,6 +14,7 @@ Session(app)
 CORS(app)
 app.register_blueprint(api, url_prefix="/api")
 app.register_blueprint(admin, url_prefix="/admin")
+app.register_blueprint(auth)
 
 @app.route("/")
 def index():
