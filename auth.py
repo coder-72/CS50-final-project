@@ -1,12 +1,20 @@
-from flask import Blueprint, request, render_template, abort
+from flask import Blueprint, request, render_template, abort, redirect
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.exceptions import HTTPException
 import utils
 
 auth = Blueprint("auth", __name__, static_folder="static")
 
-@auth.route("/login")
+@auth.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("auth/login.html")
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        
+
+        return redirect("/")
+    else:
+        return render_template("auth/login.html")
 
 
 
