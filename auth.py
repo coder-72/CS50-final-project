@@ -1,6 +1,7 @@
-from flask import Blueprint, request, render_template, abort, redirect
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import bcrypt
+from flask import Blueprint, request, render_template, abort, redirect, session
 from werkzeug.exceptions import HTTPException
+import bcrypt
 import utils
 
 auth = Blueprint("auth", __name__, static_folder="static")
@@ -10,11 +11,24 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+        user = utils.get_user(username)
+        print(user)
+        print(username)
+        print(password)
+        if user and bcrypt.checkpw(username.encode('utf-8'), user["username"].encode('utf-8')).decode('utf-8'):
+            session.clear()
+            session["user_id"] = user["id"]
+        else:
+            return render_template("auth/login.html")
 
         return redirect("/")
     else:
         return render_template("auth/login.html")
+
+@auth.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 
 

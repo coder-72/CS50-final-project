@@ -4,7 +4,9 @@ import utils
 
 admin = Blueprint("admin", __name__, static_folder="static")
 
+
 @admin.route("/")
+@utils.login_required
 def dashboard():
     html = utils.admin_articles()
     return render_template("admin/dashboard.html", html=html, page_title="dashboard", title="Dashboard", subtitle="Welcome back!")

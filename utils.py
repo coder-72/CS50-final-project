@@ -4,8 +4,10 @@ import markdown2
 from bs4 import BeautifulSoup as bs
 from protonmail import ProtonMail
 from urllib.parse import urlparse
-from flask import url_for
+from flask import url_for, session, redirect
+import bcrypt
 from email_validator import validate_email, EmailNotValidError
+from functools import wraps
 
 def get_post(post_id: int):
     conn = sqlite3.connect('blog.db')
@@ -257,4 +259,34 @@ def update_post(id:int, title: str, subtitle: str, image: str, content: str):
     cursor.close()
     conn.close()
 
-def
+def get_user(user):
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE username = ?", (user,))
+    users = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return users
+
+def login_required(func):
+    @wraps(func)
+    def decorate(*args, **kwargs):
+        print("login")
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return func(*args, **kwargs)
+    return decorate
+
+def add_user(user, password, email):
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    cursor.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (user, hash, email))
+    conn.commit()
+    cursor.close()
+    conn.close()
