@@ -285,8 +285,14 @@ def add_user(user, password, email):
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
     cursor.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (user, hash, email))
     conn.commit()
     cursor.close()
     conn.close()
+
+def logged_in():
+    if session.get("user_id") is None:
+        return False
+    else:
+        return True

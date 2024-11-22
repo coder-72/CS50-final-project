@@ -46,29 +46,7 @@
                 </div>
             </div>
         </main>
-
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="thanksToast" class="toast" role="info" aria-live="assertive" aria-atomic="true">
-              <div class="toast-header">
-                <strong class="me-auto">Travel.</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-              </div>
-              <div class="toast-body">
-                Thank you for contacting us!
-              </div>
-            </div>
-          </div>
-
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static', filename='js/validate.js')}}"></script>
-<script>
-    $(document).ready(function() {
-        let toast = new bootstrap.Toast($('#thanksToast'));
-        let thanks = {{ show_thanks | tojson }};
-        if (thanks) {
-            toast.show();
-        }
-    });
-</script>
 {% endblock %}

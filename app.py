@@ -1,4 +1,4 @@
-from flask import render_template, Flask, request, url_for, session
+from flask import render_template, Flask, request, url_for, session, flash
 from flask_cors import CORS
 from flask_session import Session
 import utils
