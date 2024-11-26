@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, abort
+from flask import Blueprint, request, render_template, flash, redirect
 from werkzeug.exceptions import HTTPException
 import utils
 
@@ -9,9 +9,10 @@ admin = Blueprint("admin", __name__, static_folder="static")
 @utils.login_required
 def dashboard():
     html = utils.admin_articles()
-    return render_template("admin/dashboard.html", html=html, page_title="dashboard", title="Dashboard", subtitle="Welcome back!")
+    return render_template("admin/dashboard.html", html=html, page_title="dashboard", title="Dashboard", subtitle="Welcome back!", logged_in=utils.logged_in())
 
 @admin.route("/add_post", methods=["GET", "POST"])
+@utils.login_required
 def add_post():
     if request.method == "POST":
         file = request.files.get("file")
@@ -25,16 +26,20 @@ def add_post():
             elif text:
                 markdown = text
             else:
-                abort(500, description="file or markdown required")
+                flash("missing valid file or text", "error")
+                return render_template("admin/add_post.html", page_title="Add post", title="Add post",subtitle="Add a new post", logged_in=utils.logged_in())
             utils.add_post(title, subtitle, image, markdown)
-            return render_template("admin/add_post.html", page_title="Add post", title="Add post",
-                                   subtitle="Add a new post", show_thanks=True)
+            flash("post successfully added!", "message")
+            return redirect("/admin/")
         else:
-            abort(500, description="title and image is required")
+            flash("title or image missing", "error")
+            return render_template("admin/add_post.html", page_title="Add post", title="Add post",subtitle="Add a new post", logged_in=utils.logged_in())
+            
     else:
-        return render_template("admin/add_post.html", page_title="Add post", title="Add post",subtitle="Add a new post", show_thanks=False)
+        return render_template("admin/add_post.html", page_title="Add post", title="Add post",subtitle="Add a new post", logged_in=utils.logged_in())
 
 @admin.route("/edit_post/<int:post_id>", methods=["GET", "POST"])
+@utils.login_required
 def edit_post(post_id):
     if request.method == "POST":
         text = request.form.get("markdown", "")
@@ -45,25 +50,30 @@ def edit_post(post_id):
             if text:
                 markdown = text
             else:
-                abort(500, description="file or markdown required")
+                flash("file or markdown missing", "error")
+                return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",
+                                   subtitle=post["title"], post=post, logged_in=utils.logged_in())
             utils.update_post(post_id, title, subtitle, image, markdown)
             post = utils.get_post(int(post_id))
-            return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",
-                                   subtitle=post["title"], post=post)
+            flash(f"post called {post[title]} successfully saved changes!", "message")
+            return redirect("/admin/")
         else:
-            abort(500, description="title and image is required")
+                flash("title ot image missing", "error")
+                return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",
+                                   subtitle=post["title"], post=post, logged_in=utils.logged_in())
     else:
         post = utils.get_post(post_id)
-        return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",subtitle=post["title"], post=post)
+        return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",subtitle=post["title"], post=post, logged_in=utils.logged_in())
 
 
 @admin.route("/preview", methods=["POST"])
+@utils.login_required
 def preview():
     markdown = request.form.get("markdown")
     title = request.form.get("title")
     subtitle = request.form.get("subtitle")
     image = request.form.get("image")
-    return render_template("views/post.html", page_title="post preview", title=title, subtitle=subtitle, heading_image=image, date=utils.format_date(utils.get_time()), post_content=utils.markdown_to_html(markdown))
+    return render_template("views/post.html", page_title="post preview", title=title, subtitle=subtitle, heading_image=image, date=utils.format_date(utils.get_time()), post_content=utils.markdown_to_html(markdown), logged_in=utils.logged_in())
 
 
 
@@ -77,5 +87,5 @@ def error_handler(error):
         error_name = "Server Error"
 
     print(error)
-    return render_template('views/error.html',page_title=error_code, error=error, code=error_code, name=error_name, time=utils.format_date(utils.get_time())), error_code
+    return render_template('views/error.html',page_title=error_code, error=error, code=error_code, name=error_name, time=utils.format_date(utils.get_time()), logged_in=utils.logged_in()), error_code
 

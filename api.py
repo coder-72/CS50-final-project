@@ -22,8 +22,10 @@ def mode():
     return jsonify(success=True)
 
 @api.route("/delete", methods=["DELETE"])
+@utils.login_required
 def delete():
     id = int(request.json.get("id"))
+    utils.delete_post(id)
     print(id)
     return jsonify(success=True)
 

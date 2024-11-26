@@ -31,7 +31,7 @@
 
 <div class="container mt-2">
     <div class="d-flex justify-content-start mb-3">
-        <a href="/admin" class="btn btn-primary d-flex align-items-center">
+        <a href="/admin/" class="btn btn-primary d-flex align-items-center">
             <i class="bi bi-arrow-return-left"></i>
             <span class="ms-2">Back</span>
         </a>
@@ -70,30 +70,10 @@
     </form>
 </div>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="addToast" class="toast" role="info" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">Travel.</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Post added
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
     <script src="{{url_for('static', filename='js/validate2.js')}}"></script>
     <script src="{{url_for('static', filename='js/preview.js')}}"></script>
     <script src="{{url_for('static', filename='js/unsaved.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            let toast = new bootstrap.Toast($('#addToast'));
-            let thanks = {{ show_thanks | tojson }};
-            if (thanks) {
-                toast.show();
-            }
-        });
-    </script>
 {% endblock %}

@@ -152,7 +152,7 @@ def search_all():
     return results
 
 def send_email(name: str, email: str, phone: str, message: str):
-    contact_email = "72.jake.ward@gmail.com"
+    emails = get_user_email()
     try:
         proton.load("session.pickle")
     except:
@@ -185,7 +185,7 @@ def send_email(name: str, email: str, phone: str, message: str):
 
     """
     message = proton.create_message(
-        recipients=[contact_email],
+        recipients=emails,
         subject="CONTACT",
         body=html
     )
@@ -235,6 +235,7 @@ def delete_post(id:int):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("DELETE FROM posts WHERE id = ? LIMIT 1", (id, ))
+    conn.commit()
     cursor.close()
     conn.close()
 
@@ -282,17 +283,36 @@ def login_required(func):
     return decorate
 
 def add_user(user, password, email):
-    conn = sqlite3.connect('blog.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
-    cursor.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (user, hash, email))
-    conn.commit()
-    cursor.close()
-    conn.close()
+    if valid_email(email.strip()):
+        conn = sqlite3.connect('blog.db')
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
+        cursor.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (user, hash, validate_email(email.strip()).email))
+        conn.commit()
+        cursor.close()
+        conn.close()
+    else:
+        raise TypeError("not a valid email adress")
 
 def logged_in():
     if session.get("user_id") is None:
         return False
     else:
         return True
+    
+def get_user_email():
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users ;")
+    users = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    emails = []
+    for user in users:
+        emails.append(user["email"])
+    return emails

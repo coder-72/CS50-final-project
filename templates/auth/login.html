@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
-
+{% block heading %}
+<h1 class="display-5 fw-bold text-white">{{title}}</h1>
+<div class="col-lg-6 mx-auto">
+  <p class="lead mb-4">{{subtitle}}</p>
+</div>
+{%  endblock %}
 <!--MADE WITH CHATGPT-->
 {% block content %}
     <div class="row justify-content-center m-3">
       <div class="col-md-6">
         <div class="card shadow-sm">
           <div class="card-body">
-            <h3 class="text-center">Login</h3>
+            <h3 class="text-center">Admin Login</h3>
             <form action="/login" class="needs-validation" method="post" novalidate>
               <div class="mb-3">
                 <label for="username" class="form-label">username</label>
