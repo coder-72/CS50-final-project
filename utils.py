@@ -10,27 +10,79 @@ from email_validator import validate_email, EmailNotValidError
 from functools import wraps
 
 def get_post(post_id: int):
+    """
+    gets all a post's info for displaying
+
+    Params
+    ------
+        post_id : int
+            id of post to get info for
+        
+    Returns
+    -------
+        post info : dictionary
+            contains post info
+    
+    Raises
+    ------
+        SQL exception
+            if the table or db don't exist
+    """
+
+    #open database connection and cursor
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #execute sql statement
     cursor.execute("SELECT * FROM posts WHERE id = ? LIMIT 1", (post_id,))
+
+    #get results
     post = cursor.fetchone()
 
+    #close connection
     cursor.close()
     conn.close()
 
     return post
 
 def add_post(title: str, subtitle: str, image: str, content: str):
+    """
+    Adds a new post to the  database
+
+    Params
+    ------
+        title : str
+            title of post to add
+        subtitle : str
+            subtitle of post to add
+        image : str
+            link to main header image of post
+        content : str
+            markdown syntax of post
+    Returns
+    -------
+        nothing
+    
+    Raises
+    ------
+        SQL exception 
+            if table or db don't exist
+
+    """
+
+    #open db connection and cursor
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #get current date
     date = get_time()
 
+    #insert post info into sql table (posts)
     cursor.execute("INSERT INTO posts (title, subtitle, image, date, content) VALUES (?, ?, ?, ?, ?)", (title, subtitle, image, date, content))
 
+    #commit data before closing connection
     conn.commit()
     cursor.close()
     conn.close()
@@ -38,10 +90,44 @@ def add_post(title: str, subtitle: str, image: str, content: str):
 
     
 def format_date(date:str):
+    """
+    formats date into human readable form
+
+    Params
+    ------
+        date : str
+            date in form year-month-day hour:minute:second
+    Returns
+    -------
+        date : str
+            in human readable format
+    """
+    #convet date string to date object
     date_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+
+    #return readable date
     return date_obj.strftime("%a %d %b %Y")
 
 def markdown_to_html(text:str):
+    """
+    converts markdown to html with proper bootstrap classes for style
+
+    Params
+    -------
+    text : str
+        markdown to convert to html
+    
+    Returns
+    -------
+    html : text
+        html with bootstrap classes
+
+    Raises
+    ------
+        Non
+    """
+
+    #markup object created with extensions
     markup = markdown2.markdown(text,  extras=[
             "fenced-code-blocks",
             "tables",
@@ -52,27 +138,36 @@ def markdown_to_html(text:str):
             "task_list",
             "smarty-pants"
         ])
+    
+    # beautiful soup object for editing classes
     soup = bs(markup, "html.parser")
+
+    #add headings class to all headings
     headings = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
     for heading in headings:
         heading["class"] = ["section-heading"]
 
+    #add blockquotes bs class to blockquotes
     blockquotes = soup.find_all(["blockquote"])
     for blockquote in blockquotes:
         blockquote["class"] = ["blockquote"]
 
+    #image bs class added to images
     images = soup.find_all(["img"])
     for image in images:
         image["class"] = ["img-fluid", "px-1"]
 
+    #makes links target new windows
     links = soup.find_all(["a"])
     for link in links:
         link["target"] = ["_blank"]
 
+    #adds bs table class to tables
     tables = soup.find_all(["table"])
     for table in tables:
         table["class"] = ["table"]
 
+    #adds classes for code blocks
     old_code= soup.find_all("code")
     for block in old_code:
         contents = block.text
@@ -84,23 +179,47 @@ def markdown_to_html(text:str):
         new_pre["class"] = ["line-numbers", "rounded"]
         block.replace_with(new_pre)
 
+    #returns html with bs classes
     return soup
 
 
 
 def get_previews(previews: int = 3) -> str:
+    """
+    gets html for preview of featured articles
+
+    Params
+    ------
+    previews : int
+        number of previews to get
+
+    Returns
+    -------
+        html : str
+            html to display previews
+    
+    Raises
+    ------
+        SQL exception
+            if sql table or db don't exist
+    """
+
+    #make connection with database and open cursor
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #execute sql and get results
     cursor.execute("SELECT id, title, subtitle, date, image FROM posts ORDER BY date DESC LIMIT ?", (previews,))
     posts = cursor.fetchall()
 
+    #close cursor and connection
     cursor.close()
     conn.close()
 
     html = ""
 
+    #loop through data appending html for preview of that data to html variable
     for post in posts:
         html_block = f"""
     <div class="col-md-4 d-flex align-items-stretch">
@@ -119,36 +238,95 @@ def get_previews(previews: int = 3) -> str:
         """
         html += html_block
 
+    #return html for previews
     return html
 
 def get_time():
+    """
+    gets current time in format year-month-day hour:minute:second
+
+    Params
+    -------
+        Non
+    
+    Returns
+    -------
+        time : str
+            time as string in format : year-month-day hour:minute:second
+    """
+
+    #get current date object
     now = datetime.now()
+
+    #convert to string in correct format
     time = now.strftime('%Y-%m-%d %H:%M:%S')
+
+    #return time
     return time
 
 def search(query: str):
+    """
+    uses query to FTS search db and returns results
+
+    Params
+    ------
+        q : str
+            query to search for
+    
+    Returns
+    -------
+        results : list of dicts
+            results of fts search
+    
+    Raises
+    -------
+        SQL exception 
+            if db or table doesn't exist or sql query wrong
+    """
+
+    #open connection and cursor for database
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #execute sql statement for query and get results
     cursor.execute("SELECT * FROM posts_fts WHERE posts_fts MATCH ? ORDER BY rank ASC LIMIT 20;", (query, ))
     results = cursor.fetchall()
 
+    #close database connection and cursor
     cursor.close()
     conn.close()
 
+    #returns results of full text search
     return results
 
 def search_all():
+    """
+    get all posts without filter by date descsending
+
+    Params
+    ------
+        non
+    Returns
+    -------
+        results : list of dicts
+            results of sql
+    """
+
+    #open connection and cursor with db
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #execute sql statement and get all results
     cursor.execute("SELECT * FROM posts ORDER BY date DESC LIMIT 20;")
     results = cursor.fetchall()
+
+    #close cursor and connection
     cursor.close()
     conn.close()
 
+    #return results in descending order of date
     return results
 
 def send_email(name: str, email: str, phone: str, message: str):
@@ -193,6 +371,22 @@ def send_email(name: str, email: str, phone: str, message: str):
 
 
 def valid_email(email):
+    """
+    checks for valid email
+
+    Params
+    -------
+        email: str
+            email to check validity of
+    Returns
+    -------
+        email : str
+            email in standard form
+        None
+            if email is invalid
+    """
+
+    #check for email invalid error
     try:
         return validate_email(email)["email"]
     except Exception:
