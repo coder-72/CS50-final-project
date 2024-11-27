@@ -2,10 +2,12 @@ from flask import Blueprint, request, jsonify, session
 from werkzeug.exceptions import HTTPException, BadRequest
 import utils
 
+#create blueprint
 api = Blueprint("api", __name__, static_folder="static")
 
 @api.route("/search")
 def search():
+    #get results for search query
     query = request.args.get("q")
     if query:
         posts = utils.search(query)
@@ -16,6 +18,7 @@ def search():
 
 @api.route("/mode", methods=["POST"])
 def mode():
+    #change theme (dark, auto, white)
     mode = request.json.get("mode")
     session["mode"] = mode
     print(mode)
@@ -24,6 +27,7 @@ def mode():
 @api.route("/delete", methods=["DELETE"])
 @utils.login_required
 def delete():
+    #use delete func to delete user
     id = int(request.json.get("id"))
     utils.delete_post(id)
     print(id)
@@ -31,6 +35,7 @@ def delete():
 
 @api.errorhandler(Exception)
 def error_handler(error):
+    #handle error
     if isinstance(error, HTTPException):
         error_code = error.code
     else:

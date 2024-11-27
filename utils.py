@@ -393,14 +393,37 @@ def valid_email(email):
         return None
 
 def admin_articles():
+    """
+    gets html to display articles to admin
+
+    Params
+    -------
+        Non
+    Returns
+    --------
+        html : str
+            html to render articles to admin users
+    Raises
+    -------
+        SQL error
+            if db or table don't exist
+    """
+
+    #connect to db and open cursor
     html = ""
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
+
+    #execute sql
     cursor.execute("SELECT * FROM posts ORDER BY date DESC")
     results = cursor.fetchall()
+
+    #close connection
     cursor.close()
     conn.close()
+
+    #loop through all articles and then create html for them and append to html element before returning
     for article in results:
         html += f'''
             <div class="accordion-item">
@@ -425,87 +448,261 @@ def admin_articles():
     return html
 
 def delete_post(id:int):
+    """
+    delete a specified post
+
+    Params
+    -------
+        id : int
+            ID of post to delete
+    Returns
+    --------
+        nothing
+    Raises
+    ------
+        SQL exception
+            if id isn't passed as an int
+            if sql db and table don't exist
+    """
+
+    #connect to db
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
+
+    #delete post
     cursor.execute("DELETE FROM posts WHERE id = ? LIMIT 1", (id, ))
+
+    #close connection to db
     conn.commit()
     cursor.close()
     conn.close()
 
 #chatgpt used
 def allowed_file(filename):
+    """
+    checks if it's an allowed file type
+
+    Params
+    -------
+        filename : str
+            file name including ending
+    Returns
+    -------
+        true or false if not an allowed file type
+    Raises
+    ------
+        Type error
+            if filename not a string
+    """
     extensions = [".md", ".txt"]
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
 #chatgpt
 def is_valid_url(url):
+    """
+    checks if url is a valid url
+
+    Params
+    -------
+        url : str
+            url to check if valid
+    Returns
+    -------
+        true or false
+            if url is or isn't valid
+    """
     parsed_url = urlparse(url)
     return all([parsed_url.scheme, parsed_url.netloc])
 
 def update_post(id:int, title: str, subtitle: str, image: str, content: str):
+    """
+    edit/update already made post
+
+    Params
+    ------
+        id : int
+            id of post to edit
+        title : str
+            new title
+        subtitle : str
+            new subtitle
+        image : str
+            new image
+        content :str
+            new content
+    Returns
+    --------
+        nothing
+    Raises
+    ------
+        SQL error
+            if post with id doesn't already exist or types of params are wrong
+    """
+
+    #connect to db
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #update post with specified id
     cursor.execute("UPDATE posts SET title = ?, subtitle = ?, image = ?, content = ? WHERE id = ? ", (title, subtitle, image, content, id))
 
+    #commit and then close cursor and connection
     conn.commit()
     cursor.close()
     conn.close()
 
 def get_user(user):
+    """
+    gets all of a users info with username
+
+    Params
+    ------
+        username: str
+            used to find info
+    Returns
+    -------
+        user info : dict
+            info for user with specified username
+    Raises
+    -------
+        sql error
+            if username not a string
+    """
+
+    #connect to db
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #get user data for one user
     cursor.execute("SELECT * FROM users WHERE username = ?", (user,))
     users = cursor.fetchone()
 
+    #close connection
     cursor.close()
     conn.close()
 
+    #return dict with data
     return users
 
 def login_required(func):
+    """
+    redirects user to login page if not logged in
+
+    Params
+    ------
+        func : function
+            function to wrap
+    Returns
+    -------
+        result of function if logged in
+        or rediects to login page if not
+    Raises
+    ------
+        exception 
+            if func not a function
+    """
     @wraps(func)
     def decorate(*args, **kwargs):
         print("login")
+        #check if user session active if not redirects else returns function
         if session.get("user_id") is None:
             return redirect("/login")
         return func(*args, **kwargs)
     return decorate
 
+
 def add_user(user, password, email):
+    """
+    add a new user
+
+    Params
+    -------
+        user: str
+            username
+        password: str
+            new users password
+        email: str
+            new users email
+    Returns
+    -------
+        nothing
+    Raises
+    -------
+        Type Error
+            if email isn't valid
+
+    """
+    #check email valid
     if valid_email(email.strip()):
+
+        #connect to db
         conn = sqlite3.connect('blog.db')
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
+
+        #hash password with salt to be stored
         hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
+
+        #add user
         cursor.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (user, hash, validate_email(email.strip()).email))
+
+        #commit and close connection
         conn.commit()
         cursor.close()
         conn.close()
     else:
+        #if email not valid raise type error
         raise TypeError("not a valid email adress")
 
 def logged_in():
+    """
+    return true if logged in
+    Params
+    ------
+        non
+    Returns
+    -------
+        true or false
+    Raises
+    ------
+        non
+    """
     if session.get("user_id") is None:
         return False
     else:
         return True
     
 def get_user_email():
+    """
+    gets all the users emails in a list
+
+    Params
+    -------
+        non
+    Returns
+    -------
+        emails: list
+    Raises
+    ------
+        non
+    """
+    #connect to db
     conn = sqlite3.connect('blog.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    #get users info
     cursor.execute("SELECT * FROM users ;")
     users = cursor.fetchall()
 
+    #close connection
     cursor.close()
     conn.close()
 
+    #add email from each user to list to be returned
     emails = []
     for user in users:
         emails.append(user["email"])

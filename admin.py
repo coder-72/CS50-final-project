@@ -8,12 +8,14 @@ admin = Blueprint("admin", __name__, static_folder="static")
 @admin.route("/")
 @utils.login_required
 def dashboard():
+    #displays posts etc.
     html = utils.admin_articles()
     return render_template("admin/dashboard.html", html=html, page_title="dashboard", title="Dashboard", subtitle="Welcome back!", logged_in=utils.logged_in())
 
 @admin.route("/add_post", methods=["GET", "POST"])
 @utils.login_required
 def add_post():
+    #webpage to add post
     if request.method == "POST":
         file = request.files.get("file")
         text = request.form.get("markdown", "")
@@ -41,6 +43,7 @@ def add_post():
 @admin.route("/edit_post/<int:post_id>", methods=["GET", "POST"])
 @utils.login_required
 def edit_post(post_id):
+    #webpage to edit posts
     if request.method == "POST":
         text = request.form.get("markdown", "")
         title = request.form.get("title")
@@ -69,6 +72,7 @@ def edit_post(post_id):
 @admin.route("/preview", methods=["POST"])
 @utils.login_required
 def preview():
+    #preview webpage
     markdown = request.form.get("markdown")
     title = request.form.get("title")
     subtitle = request.form.get("subtitle")
@@ -79,6 +83,7 @@ def preview():
 
 @admin.errorhandler(Exception)
 def error_handler(error):
+    #handles errors
     if isinstance(error, HTTPException):
         error_code = error.code
         error_name = error.name
