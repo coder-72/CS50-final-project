@@ -156,7 +156,7 @@ def contact():
 
 
 
-@app.errorhandler(Exception)
+#@app.errorhandler(Exception)
 def error_handler(error):
     """
     handles any errors that occur and displays it to the user

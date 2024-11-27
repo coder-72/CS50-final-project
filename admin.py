@@ -54,17 +54,20 @@ def edit_post(post_id):
                 markdown = text
             else:
                 flash("file or markdown missing", "error")
+                post = utils.get_post(int(post_id))
                 return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",
                                    subtitle=post["title"], post=post, logged_in=utils.logged_in())
             utils.update_post(post_id, title, subtitle, image, markdown)
             post = utils.get_post(int(post_id))
-            flash(f"post called {post[title]} successfully saved changes!", "message")
+            flash(f"post called {post["title"]} successfully saved changes!", "message")
             return redirect("/admin/")
         else:
                 flash("title ot image missing", "error")
+                post = utils.get_post(int(post_id))
                 return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",
                                    subtitle=post["title"], post=post, logged_in=utils.logged_in())
     else:
+        print(post_id)
         post = utils.get_post(post_id)
         return render_template("admin/edit_post.html", page_title="Edit post", title="Edit post",subtitle=post["title"], post=post, logged_in=utils.logged_in())
 
@@ -81,7 +84,7 @@ def preview():
 
 
 
-@admin.errorhandler(Exception)
+#@admin.errorhandler(Exception)
 def error_handler(error):
     #handles errors
     if isinstance(error, HTTPException):
