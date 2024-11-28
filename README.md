@@ -33,7 +33,7 @@ Mobile-friendly: Responsive to different-sized screens due to the use of Bootstr
 
 #### Installation:
 
-- git clone https://github.com/coder-72/CS50-final-
+- git clone https://github.com/coder-72/CS50-final-project
 - Set up venv: source venv/bin/activate
 
 #### Usage:
